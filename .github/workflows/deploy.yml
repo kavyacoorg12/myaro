@@ -1,18 +1,39 @@
-name: Deploy Backend
+name: CI/CD Pipeline
 
 on:
   push:
-    branches:
-      - master
+    branches: [ "master" ]
     paths:
       - 'server/**'
+  workflow_dispatch:
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: SSH into EC2 and deploy
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: |
+          cd server
+          npm install
+
+      - name: Build project
+        run: |
+          cd server
+          npm run build
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.EC2_HOST }}
