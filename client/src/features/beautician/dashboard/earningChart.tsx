@@ -3,22 +3,22 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 
 import type { ChartPointDto } from "../../../types/dtos/beautician";
 import { formatINR } from "../../../lib/utils/formatCurrency";
 
-
 interface Props {
   weeklyChart:  ChartPointDto[];
   monthlyChart: ChartPointDto[];
+  yearlyChart:  ChartPointDto[];
 }
 
-export const EarningsChart: React.FC<Props> = ({ weeklyChart, monthlyChart }) => {
-  const [tab, setTab] = useState<"weekly" | "monthly">("weekly");
-  const data = tab === "weekly" ? weeklyChart : monthlyChart;
+export const EarningsChart: React.FC<Props> = ({ weeklyChart, monthlyChart, yearlyChart }) => {
+  const [tab, setTab] = useState<"weekly" | "monthly" | "yearly">("weekly");
+  const data = tab === "weekly" ? weeklyChart : tab === "monthly" ? monthlyChart : yearlyChart;
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-semibold text-gray-700">Earnings</h3>
         <div className="flex gap-1">
-          {(["weekly", "monthly"] as const).map((t) => (
+          {(["weekly", "monthly", "yearly"] as const).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -50,7 +50,8 @@ export const EarningsChart: React.FC<Props> = ({ weeklyChart, monthlyChart }) =>
           />
           <Tooltip
             cursor={{ fill: "rgba(0,0,0,0.04)" }}
-formatter={(value) => [formatINR(Number(value)), "Earnings"]}            contentStyle={{ fontSize: 12, borderRadius: 8, border: "1px solid #e5e7eb" }}
+            formatter={(value) => [formatINR(Number(value)), "Earnings"]}
+            contentStyle={{ fontSize: 12, borderRadius: 8, border: "1px solid #e5e7eb" }}
           />
           <Bar dataKey="earnings" radius={[5, 5, 0, 0]}>
             {data.map((_, i) => (

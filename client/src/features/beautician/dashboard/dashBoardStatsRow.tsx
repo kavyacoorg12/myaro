@@ -1,9 +1,7 @@
-
-import { CalendarDays, Clock, CheckCircle, AlertCircle } from "lucide-react";
+import { CalendarDays, Clock, CheckCircle, AlertCircle, TrendingUp, Star } from "lucide-react";
 import type { DashboardStatsDto } from "../../../types/dtos/beautician";
 import { StatCard } from "../../shared/statCard";
 import { formatINR } from "../../../lib/utils/formatCurrency";
-
 
 interface Props {
   stats: DashboardStatsDto;
@@ -30,6 +28,16 @@ export const DashboardStatsRow: React.FC<Props> = ({ stats }) => (
       label={`Monthly earnings · ${new Date().toLocaleString("en-IN", { month: "short", year: "numeric" })}`}
       value={formatINR(stats.monthlyEarnings)}
       icon={<Clock size={24} className="text-blue-400" />}
+    />
+    <StatCard
+      label="Weekly earnings"
+      value={formatINR(stats.weeklyEarnings)}
+      icon={<TrendingUp size={24} className="text-pink-400" />}
+    />
+    <StatCard
+      label={`Yearly earnings · ${new Date().getFullYear()}`}
+      value={formatINR(stats.yearlyEarnings)}
+      icon={<Star size={24} className="text-orange-400" />}
     />
   </div>
 );

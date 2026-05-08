@@ -229,8 +229,12 @@ async getDashboardStats(beauticianId: string): Promise<DashboardStatsDto> {
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
   const todayEnd   = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  const weekStart  = new Date(now);
+  weekStart.setDate(now.getDate() - 6);
+  weekStart.setHours(0, 0, 0, 0);
+  const yearStart  = new Date(now.getFullYear(), 0, 1);
 
-  const [todayAgg, monthAgg, todayEarningsAgg] = await Promise.all([
+  const [todayAgg, monthAgg, todayEarningsAgg, weeklyAgg, yearlyAgg] = await Promise.all([
     // today's bookings by slot date
     BookingModel.aggregate([
       {
@@ -267,7 +271,7 @@ async getDashboardStats(beauticianId: string): Promise<DashboardStatsDto> {
       {
         $match: {
           beauticianId: new Types.ObjectId(beauticianId),
-          status: BookingStatus.PAID_OUT,  // ✅ fixed from COMPLETED
+          status: BookingStatus.PAID_OUT,
           updatedAt: { $gte: monthStart, $lte: todayEnd },
         },
       },
@@ -281,13 +285,37 @@ async getDashboardStats(beauticianId: string): Promise<DashboardStatsDto> {
       {
         $match: {
           beauticianId: new Types.ObjectId(beauticianId),
-          status: BookingStatus.PAID_OUT,  // ✅ admin released today
+          status: BookingStatus.PAID_OUT,
           updatedAt: { $gte: todayStart, $lte: todayEnd },
         },
       },
       {
         $group: { _id: null, todayEarnings: { $sum: "$totalPrice" } },
       },
+    ]),
+
+    // weekly earnings
+    BookingModel.aggregate([
+      {
+        $match: {
+          beauticianId: new Types.ObjectId(beauticianId),
+          status: BookingStatus.PAID_OUT,
+          updatedAt: { $gte: weekStart, $lte: todayEnd },
+        },
+      },
+      { $group: { _id: null, weeklyEarnings: { $sum: "$totalPrice" } } },
+    ]),
+
+    // yearly earnings
+    BookingModel.aggregate([
+      {
+        $match: {
+          beauticianId: new Types.ObjectId(beauticianId),
+          status: BookingStatus.PAID_OUT,
+          updatedAt: { $gte: yearStart, $lte: todayEnd },
+        },
+      },
+      { $group: { _id: null, yearlyEarnings: { $sum: "$totalPrice" } } },
     ]),
   ]);
 
@@ -297,8 +325,10 @@ async getDashboardStats(beauticianId: string): Promise<DashboardStatsDto> {
     completedToday:       t?.completed ?? 0,
     upcomingToday:        t?.upcoming  ?? 0,
     pendingRequestsCount: t?.pending   ?? 0,
-    todayEarnings:        todayEarningsAgg[0]?.todayEarnings ?? 0,  // ✅ separate
+    todayEarnings:        todayEarningsAgg[0]?.todayEarnings ?? 0,
     monthlyEarnings:      monthAgg[0]?.monthlyEarnings       ?? 0,
+    weeklyEarnings:       weeklyAgg[0]?.weeklyEarnings       ?? 0,
+    yearlyEarnings:       yearlyAgg[0]?.yearlyEarnings       ?? 0,
   };
 }
 
@@ -463,6 +493,39 @@ async getDashboardStats(beauticianId: string): Promise<DashboardStatsDto> {
   ]);
   return raw[0]?.total ?? 0;
 }
+
+async getYearlyEarnings(beauticianId: string): Promise<ChartPointDto[]> {
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const startYear = currentYear - 4; // last 5 years
+
+  const raw = await BookingModel.aggregate([
+    {
+      $match: {
+        beauticianId: new Types.ObjectId(beauticianId),
+        status: BookingStatus.PAID_OUT,
+        updatedAt: { $gte: new Date(`${startYear}-01-01`) },
+      },
+    },
+    {
+      $group: {
+        _id: { year: { $year: "$updatedAt" } },
+        earnings: { $sum: "$totalPrice" },
+      },
+    },
+    { $sort: { "_id.year": 1 } },
+  ]);
+
+  const result: ChartPointDto[] = [];
+  for (let y = startYear; y <= currentYear; y++) {
+    const found = raw.find((r) => r._id.year === y);
+    result.push({ label: String(y), earnings: found?.earnings ?? 0 });
+  }
+
+  return result;
+}
+
+
   protected map(doc: BookingDoc): Booking {
     const base = super.map(doc);
     return {

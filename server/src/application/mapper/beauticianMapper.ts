@@ -187,6 +187,7 @@ export function toBeauticianDashboardDto(raw: {
   earnings: EarningsSummaryDto;
   weeklyChart: ChartPointDto[];
   monthlyChart: ChartPointDto[];
+  yearlyChart: ChartPointDto[];
   recentPayouts: RecentPayoutDto[];
   avgRating: number;
   totalReviews: number;
@@ -196,6 +197,7 @@ export function toBeauticianDashboardDto(raw: {
     earnings: raw.earnings,
     weeklyChart: raw.weeklyChart,
     monthlyChart: raw.monthlyChart,
+    yearlyChart: raw.yearlyChart,
     recentPayouts: raw.recentPayouts,
     avgRating: raw.avgRating,
     totalReviews: raw.totalReviews,

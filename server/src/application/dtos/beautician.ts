@@ -126,6 +126,8 @@ export interface DashboardStatsDto {
   pendingRequestsCount: number;
   todayEarnings:        number;
   monthlyEarnings:      number;
+    weeklyEarnings:       number; 
+  yearlyEarnings:       number;
 }
 
 export interface EarningsSummaryDto {
@@ -152,6 +154,7 @@ export interface BeauticianDashboardDto {
   earnings:      EarningsSummaryDto;
   weeklyChart:   ChartPointDto[];
   monthlyChart:  ChartPointDto[];
+    yearlyChart:   ChartPointDto[];
   recentPayouts: RecentPayoutDto[];
   avgRating:     number;   
   totalReviews:  number;

@@ -45,6 +45,7 @@ const BeauticianDashboard: React.FC = () => {
         <EarningsChart
           weeklyChart={data.weeklyChart}
           monthlyChart={data.monthlyChart}
+          yearlyChart={data.yearlyChart}
         />
 
         <div className="grid grid-cols-2 gap-4">

@@ -13,6 +13,7 @@ export class GetBeauticianDashboardUseCase implements IGetBeauticianDashboardUse
     private readonly _userRepo: IUserRepository,
     private readonly _commentRepo: ICommentRepository,
   ) {}
+
   async execute(beauticianId: string): Promise<IGetBeauticianDashboardOutPut> {
     const beautician = await this._userRepo.findByUserId(beauticianId);
 
@@ -20,6 +21,7 @@ export class GetBeauticianDashboardUseCase implements IGetBeauticianDashboardUse
       stats,
       weeklyChart,
       monthlyChart,
+      yearlyChart,
       payoutSummary,
       totalEarnings,
       pendingAmount,
@@ -29,12 +31,13 @@ export class GetBeauticianDashboardUseCase implements IGetBeauticianDashboardUse
       this._bookingRepo.getDashboardStats(beauticianId),
       this._bookingRepo.getWeeklyEarnings(beauticianId),
       this._bookingRepo.getMonthlyEarnings(beauticianId),
+      this._bookingRepo.getYearlyEarnings(beauticianId),
       this._payoutRepo.getEarningsSummary(
         beauticianId,
         beautician?.createdAt ?? new Date(),
       ),
       this._bookingRepo.getTotalEarnings(beauticianId),
-       this._bookingRepo.getPendingEarnings(beauticianId),  
+      this._bookingRepo.getPendingEarnings(beauticianId),
       this._payoutRepo.getRecent(beauticianId, 5),
       this._commentRepo.getRatingSummary(beauticianId),
     ]);
@@ -44,8 +47,8 @@ export class GetBeauticianDashboardUseCase implements IGetBeauticianDashboardUse
       withdrawableAmount: Math.max(
         0,
         totalEarnings - payoutSummary.totalEarnings,
-      ), 
-      pendingAmount:pendingAmount, 
+      ),
+      pendingAmount: pendingAmount,
       joinedSince: payoutSummary.joinedSince,
     };
 
@@ -54,6 +57,7 @@ export class GetBeauticianDashboardUseCase implements IGetBeauticianDashboardUse
       earnings,
       weeklyChart,
       monthlyChart,
+      yearlyChart,
       recentPayouts,
       avgRating,
       totalReviews,
