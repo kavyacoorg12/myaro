@@ -2,7 +2,7 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
   workflow_dispatch:
 
 jobs:
@@ -43,6 +43,5 @@ jobs:
             cd ~/myaro
             git pull origin master
             cd server
-            npm install
-            npm run build
-            pm2 restart all
+            docker compose down
+            docker compose up -d --build

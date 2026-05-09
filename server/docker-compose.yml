@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  server:
+    build: .
+    container_name: myaro-backend
+    ports:
+      - "4323:4323"
+    restart: always
+    env_file:
+      - .env
