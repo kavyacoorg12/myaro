@@ -12,4 +12,4 @@ RUN npm run build
 
 EXPOSE 4323
 
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/main.js"]
