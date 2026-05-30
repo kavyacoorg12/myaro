@@ -20,10 +20,6 @@ export const PostFeed: React.FC<PostFeedProps> = ({
   const observerRef = useRef<IntersectionObserver | null>(null);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
 
-  // ← Lifted from PostModal: PostFeed now owns the LikeListModal so it renders
-  //   as a sibling portal to PostModal instead of a nested portal inside it.
-  //   This prevents click events from bubbling through stacked portals and
-  //   triggering onLike / closing PostModal when the backdrop is clicked.
   const [likesPostId, setLikesPostId] = useState<string | null>(null);
 
   const currentUser = useSelector((store: RootState) => store.user.currentUser);

@@ -447,7 +447,7 @@ export const PostModal = ({
                               >
                                 Reply
                               </button>
-                              {(r.user?.id === currentUser?.userName || isPostOwner) && (
+                              {(r.user?.name === currentUser?.userName || isPostOwner) && (
                                 <button
                                   onClick={() => handleDeleteReply(cm.commentId, r.id)}
                                   className="text-xs text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity"

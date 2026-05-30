@@ -1,4 +1,3 @@
-// import { Link } from "react-router";
 import { Link } from "react-router";
 import { publicFrontendRoutes } from "../../../constants/frontendRoutes/publicFrontendRoutes";
 import RegisterForm from "../components/registerForm";

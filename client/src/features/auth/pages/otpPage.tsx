@@ -77,7 +77,7 @@ const OtpUI: React.FC<OtpUIProps> = ({
             )}
           </div>
           <div className="text-center mb-6 mt-4">
-                {signupToken ? (
+                 
                   <>
                     <span className="text-sm text-gray-600">Didn't get code? </span>
 
@@ -93,9 +93,7 @@ const OtpUI: React.FC<OtpUIProps> = ({
                       </button>
                     )}
                   </>
-                ) : (
-                  <span className="text-sm text-gray-400">({timer}s)</span>
-                )}
+                
               </div>
           <button
             type="submit"

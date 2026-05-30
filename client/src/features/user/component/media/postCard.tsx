@@ -125,9 +125,9 @@ export const PostCard: React.FC<PostCardProps> = ({
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <button className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-50 transition">
+            {/* <button className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-50 transition">
               <MoreHorizontal className="w-4 h-4" />
-            </button>
+            </button> */}
           </div>
         </div>
 
@@ -223,13 +223,13 @@ export const PostCard: React.FC<PostCardProps> = ({
               </button>
 
               {/* Share */}
-              <button className="group transition-transform active:scale-90">
+              {/* <button className="group transition-transform active:scale-90">
                 <Send className="w-5 h-5 text-gray-700 group-hover:text-green-400 transition-colors" />
-              </button>
+              </button> */}
             </div>
 
             {/* Bookmark */}
-            <button
+            {/* <button
               onClick={() => setSaved((s) => !s)}
               className="transition-transform active:scale-90"
             >
@@ -240,7 +240,7 @@ export const PostCard: React.FC<PostCardProps> = ({
                     : "text-gray-700 hover:text-gray-900"
                 }`}
               />
-            </button>
+            </button> */}
           </div>
 
           {post.description && (
