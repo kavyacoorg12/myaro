@@ -17,14 +17,12 @@ export function validateUserInput(
     return res.status(400).json({ error: "Please enter valid email" });
   }
 
-  const regexUserName = /^(?=.*[A-Za-z])(?=.*\d)(?=.*_)[A-Za-z0-9_]+$/;
-
+  const regexUserName = /^(?=.*[A-Za-z])[A-Za-z0-9_]+$/;
   if (!regexUserName.test(userName)) {
-    return res
-      .status(400)
-      .json({
-        error: "Username must include a letter, number, and underscore.",
-      });
+    return res.status(400).json({
+      error:
+        "Username can contain letters, numbers, and underscores, and must include at least one letter.",
+    });
   }
 
   if (userName.length < 6 || userName.length > 40) {
@@ -52,12 +50,10 @@ export function validateUserInput(
   const regexPassword =
     /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
   if (!regexPassword.test(password)) {
-    return res
-      .status(400)
-      .json({
-        error:
-          "Password must contain at least 8 characters, one uppercase, one lowercase, one number, and one special symbol",
-      });
+    return res.status(400).json({
+      error:
+        "Password must contain at least 8 characters, one uppercase, one lowercase, one number, and one special symbol",
+    });
   }
 
   if (password !== confirmPassword) {
@@ -89,12 +85,10 @@ export function validatePassword(
   const regexPassword =
     /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
   if (!regexPassword.test(password)) {
-    return res
-      .status(400)
-      .json({
-        error:
-          "Password must contain at least 8 characters, one uppercase, one lowercase, one number, and one special symbol",
-      });
+    return res.status(400).json({
+      error:
+        "Password must contain at least 8 characters, one uppercase, one lowercase, one number, and one special symbol",
+    });
   }
 
   if (password !== confirmPassword) {
@@ -108,16 +102,14 @@ export function validateChangePassword(
   res: Response,
   next: NextFunction,
 ) {
-  const {  newPassword, confirmPassword } = req.body.input;
+  const { newPassword, confirmPassword } = req.body.input;
   const regexPassword =
     /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
   if (!regexPassword.test(newPassword)) {
-    return res
-      .status(400)
-      .json({
-        error:
-          "Password must contain at least 8 characters, one uppercase, one lowercase, one number, and one special symbol",
-      });
+    return res.status(400).json({
+      error:
+        "Password must contain at least 8 characters, one uppercase, one lowercase, one number, and one special symbol",
+    });
   }
 
   if (newPassword !== confirmPassword) {
